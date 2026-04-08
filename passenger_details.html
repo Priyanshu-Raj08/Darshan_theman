@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIRPRO | Passenger Details</title>
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <!-- icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#264191",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed": "#00164e",
+                        "secondary": "#4059aa",
+                        "tertiary-fixed-dim": "#4fdbc8",
+                        "surface-tint": "#0053db",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary": "#006056",
+                        "tertiary-fixed": "#71f8e4",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "primary": "#004ac6",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline": "#737686",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#8fa7fe",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-container": "#b1fff1",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#dce1ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary-container": "#1d3989",
+                        "secondary-fixed-dim": "#b6c4ff",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#434655",
+                        "surface-container-high": "#e6e8ea",
+                        "background": "#f1f3f5",
+                        "surface": "#f1f3f5",
+                        "tertiary-container": "#007b6e",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-container": "#eeefff",
+                        "surface-bright": "#f1f3f5",
+                        "error": "#ba1a1a"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f3f5;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #434655;
+            /* on-surface-variant */
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .form-input {
+            border: 1px solid #c3c6d7;
+            /* outline-variant */
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            background-color: #ffffff;
+        }
+
+        .form-input:focus {
+            border-color: #004ac6;
+            /* primary */
+            box-shadow: 0 0 0 2px rgba(0, 74, 198, 0.2);
+        }
+
+        .error-border {
+            border-color: #ba1a1a !important;
+            /* error */
+            background-color: #ffdad6;
+            /* error-container */
+        }
+
+        .error-text {
+            color: #ba1a1a;
+            font-size: 10px;
+            margin-top: 4px;
+            display: none;
+            font-weight: 600;
+        }
+
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+
+    <!-- navigation -->
+    <header
+        class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-700/60 sticky top-0 z-50">
+        <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+            <div class="text-2xl font-black tracking-tighter text-blue-700 dark:text-blue-500 cursor-pointer"
+                onclick="window.location.href='index.html'">
+                AIRPRO
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 font-manrope tracking-tight font-medium text-sm">
+                <button
+                    class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-200"
+                    onclick="window.location.href='index.html'">Home</button>
+                <button
+                    class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-200"
+                    onclick="void(0)">Flights</button>
+                <button
+                    class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-200"
+                    onclick="void(0)">Bookings</button>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button class="text-slate-600 hover:text-primary transition-colors" onclick="void(0)">
+                    <span class="material-symbols-outlined align-middle"
+                        data-icon="account_circle">account_circle</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 lg:py-8 grid grid-cols-12 gap-6 w-full">
+
+        <!-- Forms -->
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+            <div id="passengerList" class="space-y-6">
+                <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" id="p1">
+                    <div class="bg-gray-50 px-6 py-3 border-b flex justify-between items-center">
+                        <h2 class="font-bold text-gray-700 text-xs uppercase">Passenger 1 (Adult)</h2>
+                        <span
+                            class="text-[9px] bg-blue-100 text-blue-800 px-2 py-1 rounded font-bold uppercase">Primary</span>
+                    </div>
+                    <div class="p-6 grid grid-cols-12 gap-4">
+                        <div class="col-span-12 md:col-span-2"><label class="form-label">Title*</label><select
+                                class="form-input">
+                                <option>Mr.</option>
+                                <option>Mrs.</option>
+                                <option>Ms.</option>
+                            </select></div>
+                        <div class="col-span-12 md:col-span-5">
+                            <label class="form-label">First Name*</label>
+                            <input type="text" placeholder="First Name" required class="form-input p-firstname"
+                                onkeydown="onlyLetters(event)"
+                                oninput="validateName(this, document.getElementById('fnErr1'))">
+                            <p id="fnErr1" class="error-text"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-5">
+                            <label class="form-label">Last Name*</label>
+                            <input type="text" placeholder="Last Name" required class="form-input p-lastname"
+                                onkeydown="onlyLetters(event)"
+                                oninput="validateName(this, document.getElementById('lnErr1'))">
+                            <p id="lnErr1" class="error-text"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-4"><label class="form-label">Gender*</label><select required
+                                class="form-input">
+                                <option value="">Select</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select></div>
+                        <div class="col-span-12 md:col-span-4">
+                            <label class="form-label">DOB*</label>
+                            <input type="date" required class="form-input p-dob"
+                                onchange="calculateAge(this, 'age1', 'dobErr1')" id="dob1">
+                            <p id="dobErr1" class="error-text"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-4"><label class="form-label">Age</label><input type="text"
+                                id="age1" readonly placeholder="Auto-fill" class="form-input bg-gray-50"></div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="form-label">ID Type*</label>
+                            <select class="form-input p-idtype" onchange="onIDTypeChange(this, 'idErr1')">
+                                <option>Aadhaar</option>
+                                <option>Passport</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="form-label">ID Number*</label>
+                            <input type="text" placeholder="12-digit Aadhaar number" maxlength="12" required
+                                class="form-input p-idnumber"
+                                oninput="validateIDNumber(this.closest('section').querySelector('.p-idtype'), this, document.getElementById('idErr1'))"
+                                onkeydown="restrictIDInput(event, this.closest('section').querySelector('.p-idtype'))">
+                            <p id="idErr1" class="error-text"></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <button onclick="addPassenger()" id="add-passenger-btn"
+                class="text-blue-700 font-bold text-sm flex items-center gap-2 hover:underline">+ Add Another
+                Passenger</button>
+
+            <!-- Contact -->
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-3 border-b">
+                    <h2 class="font-bold text-gray-700 text-xs uppercase">Contact Information</h2>
+                </div>
+                <div class="p-6 grid grid-cols-12 gap-4">
+                    <div class="col-span-12 md:col-span-6">
+                        <label class="form-label">Mobile Number*</label>
+                        <div class="flex">
+                            <span class="bg-gray-100 border border-r-0 px-3 py-2 text-sm rounded-l">+91</span>
+                            <input type="text" id="userPhone" maxlength="10" placeholder="xxxxxxxxxx"
+                                class="form-input rounded-l-none"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                oninput="validatePhone()">
+                        </div>
+                        <p id="phoneError" class="error-text">Enter valid Mobile Number.</p>
+                    </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <label class="form-label">Email Address*</label>
+                        <input type="email" id="userEmail" placeholder="name@example.com" class="form-input"
+                            onkeydown="if(event.key === ' ') event.preventDefault();" oninput="validateEmail()">
+                        <p id="emailError" class="error-text">Enter a valid email address.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sidebar Summary -->
+        <div class="col-span-12 lg:col-span-4">
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6 sticky top-24">
+                <h3 class="font-black text-primary text-xs uppercase mb-4 border-b pb-2">Fare Summary</h3>
+                <div class="space-y-3 text-sm pb-4">
+                    <div class="flex justify-between text-gray-500"><span>Base Fare (x <span
+                                id="pCountText">1</span>)</span><span id="baseFareText">₹4,250</span></div>
+                    <div class="flex justify-between text-gray-500" id="seatFeeRow" style="display: none;">
+                        <span>Selected Seat (<span id="seatNoText">--</span>)</span><span id="seatFeeText">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-gray-500"><span>Taxes & Fees</span><span
+                            id="taxText">₹899</span></div>
+                </div>
+                <div class="flex justify-between items-center border-t pt-4">
+                    <span class="font-black text-xs uppercase">Grand Total</span>
+                    <span class="text-2xl font-black text-primary" id="totalAmountText">₹5,149</span>
+                </div>
+                <button onclick="finalSubmit()"
+                    class="bg-primary text-white w-full py-4 mt-6 rounded-lg font-black uppercase text-sm hover:opacity-90">Confirm
+                    Booking</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- bottom -->
+    <footer class="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 mt-12">
+        <div class="flex flex-col md:flex-row justify-between items-center w-full px-8 py-12 max-w-7xl mx-auto">
+            <div class="mb-6 md:mb-0">
+                <div class="text-lg font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
+                    onclick="window.location.href='index.html'">
+                    AIRPRO</div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-inter mt-1 tracking-wide">
+                    © 2026 AIRPRO Airline Management. All rights reserved.
+                </p>
+            </div>
+            <div class="flex space-x-8 font-inter text-xs tracking-wide">
+                <button
+                    class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                    onclick="window.location.href='footers/privacy_policy.html'">Privacy Policy</button>
+                <button
+                    class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                    onclick="window.location.href='footers/T&C.html'">Terms of Service</button>
+                <button
+                    class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                    onclick="window.location.href='footers/support.html'">Support</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Unaccompanied Minor Modal -->
+    <div id="minorModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-8 text-center border-t-4 border-error relative">
+            <div class="mx-auto w-16 h-16 rounded-full bg-error-container flex items-center justify-center mb-6">
+                <span class="material-symbols-outlined text-error text-3xl">family_restroom</span>
+            </div>
+            <h2 class="text-2xl font-black font-headline text-on-surface mb-3 tracking-tight">Adult Required</h2>
+            <p class="text-on-surface-variant text-sm mb-8 leading-relaxed">
+                Passengers under 18 years of age cannot travel alone. An adult (18+ years) must accompany them.
+            </p>
+            <div class="flex flex-col gap-3">
+                <button onclick="addAdultFromModal()"
+                    class="w-full bg-primary text-white py-3 rounded-full font-bold hover:opacity-90 transition-opacity">
+                    Add Adult Passenger
+                </button>
+                <button onclick="closeMinorModal()"
+                    class="w-full text-slate-500 font-bold py-3 hover:bg-slate-50 rounded-full transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Error Modal -->
+    <div id="errorModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-8 text-center border-t-4 border-error relative">
+            <div class="mx-auto w-16 h-16 rounded-full bg-error-container flex items-center justify-center mb-6">
+                <span class="material-symbols-outlined text-error text-3xl">error</span>
+            </div>
+            <h2 class="text-2xl font-black font-headline text-on-surface mb-3 tracking-tight">Attention</h2>
+            <p id="errorModalMsg" class="text-on-surface-variant text-sm mb-8 leading-relaxed">
+                An error occurred.
+            </p>
+            <div class="flex flex-col gap-3">
+                <button onclick="closeErrorModal()"
+                    class="w-full bg-error text-white py-3 rounded-full font-bold hover:opacity-90 transition-opacity">
+                    Understood
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addAdultFromModal() {
+            closeMinorModal();
+            addPassenger();
+        }
+
+        function closeMinorModal() {
+            document.getElementById('minorModal').classList.add('hidden');
+        }
+
+        function showErrorModal(msg) {
+            document.getElementById('errorModalMsg').innerText = msg;
+            document.getElementById('errorModal').classList.remove('hidden');
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModal').classList.add('hidden');
+        }
+
+        let pCount = 0;
+        let BASE_PRICE = 4250;
+        let SEAT_PRICE = 0;
+        let selectedSeatsList = [];
+        const TAX_PRICE = 899;
+
+        // Compute max DOB: must be at least 7 days before today
+        function getMaxDOB() {
+            const d = new Date();
+            d.setDate(d.getDate() - 7);
+            return d.toISOString().split('T')[0];
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set max DOB for static passenger 1 field
+            document.getElementById('dob1').max = getMaxDOB();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const price = urlParams.get('price');
+            const seats = urlParams.get('seats');
+            const seatPrice = urlParams.get('seatPrice');
+
+            if (price) {
+                BASE_PRICE = parseInt(price.replace(/[₹,]/g, '')) || 4250;
+            }
+
+            if (seats) {
+                selectedSeatsList = seats.split(',');
+                pCount = 0;
+                document.getElementById('passengerList').innerHTML = '';
+                selectedSeatsList.forEach((s) => { addPassenger(s); });
+                document.getElementById('add-passenger-btn').style.display = 'none';
+            } else {
+                pCount = 0;
+                addPassenger();
+            }
+
+            if (seatPrice) {
+                SEAT_PRICE = parseInt(seatPrice.replace(/[₹,]/g, '')) || 0;
+                document.getElementById('seatNoText').innerText = selectedSeatsList.join(', ');
+                document.getElementById('seatFeeText').innerText = `₹${SEAT_PRICE.toLocaleString('en-IN')}`;
+                document.getElementById('seatFeeRow').style.display = 'flex';
+            }
+
+            updateFare();
+        });
+
+        function validatePhone() {
+            const el = document.getElementById('userPhone'), err = document.getElementById('phoneError');
+            const isValid = /^[6-9]\d{9}$/.test(el.value);
+            el.classList.toggle('error-border', !isValid && el.value !== "");
+            err.style.display = (!isValid && el.value !== "") ? 'block' : 'none';
+            return isValid;
+        }
+
+        function validateEmail() {
+            const el = document.getElementById('userEmail'), err = document.getElementById('emailError');
+            if (el.value.includes(' ')) {
+                el.value = el.value.replace(/\s+/g, '');
+            }
+            const isValid = /^[a-zA-Z][^\s@]*@[^\s@]+\.[^\s@]+$/.test(el.value);
+            el.classList.toggle('error-border', !isValid && el.value !== "");
+            err.style.display = (!isValid && el.value !== "") ? 'block' : 'none';
+            return isValid;
+        }
+
+        function calculateAge(dobElement, targetId, errId) {
+            const val = dobElement.value;
+            const errEl = document.getElementById(errId);
+            if (!val) return;
+
+            // DOB must be at least 7 days before today
+            const maxDOB = new Date();
+            maxDOB.setDate(maxDOB.getDate() - 7);
+            maxDOB.setHours(0, 0, 0, 0);
+            const entered = new Date(val);
+            entered.setHours(0, 0, 0, 0);
+
+            if (entered > maxDOB) {
+                dobElement.classList.add('error-border');
+                errEl.style.display = 'block';
+                errEl.textContent = 'DOB must be at least 7 days before today.';
+                document.getElementById(targetId).value = '';
+                return;
+            }
+
+            dobElement.classList.remove('error-border');
+            errEl.style.display = 'none';
+
+            const today = new Date();
+            let age = today.getFullYear() - entered.getFullYear();
+            if (today.getMonth() < entered.getMonth() || (today.getMonth() === entered.getMonth() && today.getDate() < entered.getDate())) age--;
+            document.getElementById(targetId).value = age >= 0 ? `${age} Yrs` : "Invalid";
+
+            // If Passenger 1 is under 18, check if there's any adult already added
+            if (targetId === 'age1' && age >= 0 && age < 18) {
+                let hasAdult = false;
+                for (let i = 2; i <= pCount; i++) {
+                    const dobInput = document.getElementById(`p${i}`)?.querySelector('.p-dob');
+                    if (dobInput && dobInput.value) {
+                        const ed = new Date(dobInput.value);
+                        let a = today.getFullYear() - ed.getFullYear();
+                        if (today.getMonth() < ed.getMonth() || (today.getMonth() === ed.getMonth() && today.getDate() < ed.getDate())) a--;
+                        if (a >= 18) {
+                            hasAdult = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasAdult) {
+                    document.getElementById('minorModal').classList.remove('hidden');
+                }
+            }
+        }
+
+        // Block letters from name fields — only allow letters, spaces, hyphens
+        function onlyLetters(e) {
+            // Prevent leading spaces
+            if (e.key === ' ' && e.target.selectionStart === 0) {
+                e.preventDefault();
+                return;
+            }
+            const allowed = /[a-zA-Z\s\-']/;
+            if (!allowed.test(e.key) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(e.key)) {
+                e.preventDefault();
+            }
+        }
+
+        // Validate name: no digits allowed
+        function validateName(input, errEl) {
+            // Filter leading spaces
+            if (input.value.startsWith(' ')) {
+                input.value = input.value.trimStart();
+            }
+
+            const val = input.value;
+            if (/\d/.test(val)) {
+                input.classList.add('error-border');
+                errEl.style.display = 'block';
+                errEl.textContent = 'Name cannot contain numbers.';
+                return false;
+            }
+            input.classList.remove('error-border');
+            errEl.style.display = 'none';
+            return true;
+        }
+
+        // Validate ID number based on selected type
+        function validateIDNumber(selectEl, inputEl, errEl) {
+            const type = selectEl.value;
+            const val = inputEl.value.trim();
+            if (!val) return true; // empty — let required handle it
+
+            if (type === 'Aadhaar') {
+                if (!/^\d{12}$/.test(val)) {
+                    inputEl.classList.add('error-border');
+                    errEl.style.display = 'block';
+                    errEl.textContent = 'Aadhaar must be exactly 12 digits.';
+                    return false;
+                }
+            } else if (type === 'Passport') {
+                if (!/^[A-Za-z]\d{9}$/.test(val)) {
+                    inputEl.classList.add('error-border');
+                    errEl.style.display = 'block';
+                    errEl.textContent = 'Passport must start with a letter followed by 9 digits (10 chars total).';
+                    return false;
+                }
+            }
+            inputEl.classList.remove('error-border');
+            errEl.style.display = 'none';
+            return true;
+        }
+
+        function updateFare() {
+            document.getElementById('pCountText').innerText = pCount;
+            document.getElementById('baseFareText').innerText = `₹${(BASE_PRICE * pCount).toLocaleString('en-IN')}`;
+            document.getElementById('taxText').innerText = `₹${(TAX_PRICE * pCount).toLocaleString('en-IN')}`;
+            const total = (BASE_PRICE + TAX_PRICE) * pCount + SEAT_PRICE;
+            document.getElementById('totalAmountText').innerText = `₹${total.toLocaleString('en-IN')}`;
+        }
+
+        function addPassenger(seatLabel = null) {
+            if (pCount >= 9) {
+                showErrorModal("Maximum passenger limit reached (9 passengers).");
+                return;
+            }
+            pCount++;
+            const id = `p${pCount}`;
+            const ageId = `age${pCount}`;
+            const dobErrId = `dobErr${pCount}`;
+            const fnErrId = `fnErr${pCount}`;
+            const lnErrId = `lnErr${pCount}`;
+            const idErrId = `idErr${pCount}`;
+            const headerText = seatLabel ? `Passenger ${pCount} - Seat ${seatLabel}` : `Passenger ${pCount}`;
+            const removeBtn = seatLabel ? '' : `<button onclick="removePassenger('${id}')" class="text-red-500 text-[10px] font-bold uppercase">Remove</button>`;
+            const maxDOB = getMaxDOB();
+
+            const html = `
+                <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6" id="${id}">
+                    <div class="bg-gray-50 px-6 py-3 border-b flex justify-between items-center">
+                        <h2 class="font-bold text-gray-700 text-xs uppercase">${headerText}</h2>
+                        ${removeBtn}
+                    </div>
+                    <div class="p-6 grid grid-cols-12 gap-4">
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="form-label">First Name*</label>
+                            <input type="text" required class="form-input p-firstname"
+                                onkeydown="onlyLetters(event)"
+                                oninput="validateName(this, document.getElementById('${fnErrId}'))">
+                            <p id="${fnErrId}" class="error-text"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="form-label">Last Name*</label>
+                            <input type="text" required class="form-input p-lastname"
+                                onkeydown="onlyLetters(event)"
+                                oninput="validateName(this, document.getElementById('${lnErrId}'))">
+                            <p id="${lnErrId}" class="error-text"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-4">
+                            <label class="form-label">DOB*</label>
+                            <input type="date" required class="form-input p-dob"
+                                max="${maxDOB}"
+                                onchange="calculateAge(this, '${ageId}', '${dobErrId}')">
+                            <p id="${dobErrId}" class="error-text"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-4">
+                            <label class="form-label">Age</label>
+                            <input type="text" id="${ageId}" readonly class="form-input bg-gray-50">
+                        </div>
+                        <div class="col-span-12 md:col-span-4">
+                            <label class="form-label">Gender*</label>
+                            <select class="form-input p-gender"><option>Male</option><option>Female</option></select>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="form-label">ID Type*</label>
+                            <select class="form-input p-idtype" onchange="onIDTypeChange(this, '${idErrId}')">
+                                <option>Aadhaar</option>
+                                <option>Passport</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="form-label">ID Number*</label>
+                            <input type="text" required class="form-input p-idnumber"
+                                placeholder="12-digit Aadhaar number" maxlength="12"
+                                oninput="validateIDNumber(this.closest('section').querySelector('.p-idtype'), this, document.getElementById('${idErrId}'))"
+                                onkeydown="restrictIDInput(event, this.closest('section').querySelector('.p-idtype'))">
+                            <p id="${idErrId}" class="error-text"></p>
+                        </div>
+                    </div>
+                </section>`;
+            document.getElementById('passengerList').insertAdjacentHTML('beforeend', html);
+            updateFare();
+        }
+
+        function onIDTypeChange(selectEl, errId) {
+            const section = selectEl.closest('section');
+            const idInput = section.querySelector('.p-idnumber');
+            const errEl = document.getElementById(errId);
+            // Reset input and error when type changes
+            idInput.value = '';
+            idInput.classList.remove('error-border');
+            errEl.style.display = 'none';
+            if (selectEl.value === 'Aadhaar') {
+                idInput.placeholder = '12-digit Aadhaar number';
+                idInput.maxLength = 12;
+            } else {
+                idInput.placeholder = 'e.g. A123456789';
+                idInput.maxLength = 10;
+            }
+        }
+
+        function restrictIDInput(e, selectEl) {
+            const type = selectEl.value;
+            const allowed = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+            if (allowed.includes(e.key)) return;
+
+            if (type === 'Aadhaar') {
+                // Only digits, no negatives
+                if (!/^\d$/.test(e.key)) e.preventDefault();
+                // Prevent typing more than 12 digits
+                if (e.target.value.length >= 12 && e.target.selectionStart === e.target.selectionEnd) e.preventDefault();
+            } else if (type === 'Passport') {
+                const input = e.target;
+                const pos = input.selectionStart;
+                if (pos === 0) {
+                    // First character must be a letter
+                    if (!/^[A-Za-z]$/.test(e.key)) e.preventDefault();
+                } else {
+                    // Rest must be digits
+                    if (!/^\d$/.test(e.key)) e.preventDefault();
+                }
+            }
+        }
+
+        function removePassenger(id) {
+            document.getElementById(id).remove();
+            pCount--;
+            updateFare();
+        }
+
+        function finalSubmit() {
+            if (!validatePhone() || !validateEmail()) {
+                showErrorModal("Please provide valid contact information (Mobile and Email).");
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            let hasAdult = false;
+            const total = document.getElementById('totalAmountText').innerText;
+            const passengers = [];
+            const maxDOB = new Date();
+            maxDOB.setDate(maxDOB.getDate() - 7);
+            maxDOB.setHours(0, 0, 0, 0);
+
+            for (let i = 1; i <= pCount; i++) {
+                const section = document.getElementById(`p${i}`);
+                if (!section) continue;
+
+                const fnInput = section.querySelector('.p-firstname');
+                const lnInput = section.querySelector('.p-lastname');
+                const dobInput = section.querySelector('.p-dob');
+                const idTypeEl = section.querySelector('.p-idtype');
+                const idNumInput = section.querySelector('.p-idnumber');
+                const fnErrEl = document.getElementById(`fnErr${i}`);
+                const lnErrEl = document.getElementById(`lnErr${i}`);
+                const dobErrEl = document.getElementById(`dobErr${i}`);
+                const idErrEl = document.getElementById(`idErr${i}`);
+
+                let valid = true;
+
+                // First name
+                if (!fnInput.value.trim()) {
+                    fnInput.classList.add('error-border');
+                    fnErrEl.textContent = 'First name is required.';
+                    fnErrEl.style.display = 'block';
+                    valid = false;
+                } else if (!validateName(fnInput, fnErrEl)) {
+                    valid = false;
+                }
+
+                // Last name
+                if (!lnInput.value.trim()) {
+                    lnInput.classList.add('error-border');
+                    lnErrEl.textContent = 'Last name is required.';
+                    lnErrEl.style.display = 'block';
+                    valid = false;
+                } else if (!validateName(lnInput, lnErrEl)) {
+                    valid = false;
+                }
+
+                // DOB — must be filled and at least 7 days before today
+                if (!dobInput.value) {
+                    dobInput.classList.add('error-border');
+                    dobErrEl.textContent = 'Date of birth is required.';
+                    dobErrEl.style.display = 'block';
+                    valid = false;
+                } else {
+                    const entered = new Date(dobInput.value);
+                    entered.setHours(0, 0, 0, 0);
+                    if (entered > maxDOB) {
+                        dobInput.classList.add('error-border');
+                        dobErrEl.textContent = 'DOB must be at least 7 days before today.';
+                        dobErrEl.style.display = 'block';
+                        valid = false;
+                    } else {
+                        const today = new Date();
+                        let a = today.getFullYear() - entered.getFullYear();
+                        if (today.getMonth() < entered.getMonth() || (today.getMonth() === entered.getMonth() && today.getDate() < entered.getDate())) a--;
+                        if (a >= 18) hasAdult = true;
+                    }
+                }
+
+                // ID Number
+                if (!idNumInput.value.trim()) {
+                    idNumInput.classList.add('error-border');
+                    idErrEl.textContent = 'ID Number is required.';
+                    idErrEl.style.display = 'block';
+                    valid = false;
+                } else if (!validateIDNumber(idTypeEl, idNumInput, idErrEl)) {
+                    valid = false;
+                }
+
+                if (!valid) {
+                    showErrorModal(`Please complete all required fields correctly for Passenger ${i}.`);
+                    return;
+                }
+
+                passengers.push({
+                    name: `${fnInput.value.trim()} ${lnInput.value.trim()}`,
+                    gender: section.querySelector('.p-gender').value,
+                    seat: selectedSeatsList[i - 1] || 'N/A'
+                });
+            }
+
+            if (!hasAdult && pCount > 0) {
+                showErrorModal("All passengers are under 18. At least one passenger on this booking must be an adult (18 years or older).");
+                return;
+            }
+
+            const bookingData = {
+                flightNo: urlParams.get('flightNo') || 'AP-101',
+                route: urlParams.get('route') || 'Unknown Route',
+                codes: urlParams.get('codes') || '--- → ---',
+                time: urlParams.get('time') || '--:-- - --:--',
+                date: urlParams.get('date') || 'TBD',
+                passengers: passengers,
+                baseFare: BASE_PRICE,
+                tax: TAX_PRICE,
+                total: total
+            };
+
+            localStorage.setItem('airpro_pending_booking', JSON.stringify(bookingData));
+            window.location.href = `payment.html?amount=${encodeURIComponent(total)}`;
+        }
+    </script>
+</body>
+
+</html>

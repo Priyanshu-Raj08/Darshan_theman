@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upgrade Plan - AIRPRO</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <style>
+        :root {
+            --primary: #004ac6;
+            --primary-dark: #003a9e;
+            --silver: #6b7280;
+            --silver-bg: #f3f4f6;
+            --silver-border: #d1d5db;
+            --gold: #b45309;
+            --gold-bg: #fffbeb;
+            --gold-border: #fbbf24;
+            --platinum: #5b21b6;
+            --platinum-bg: #f5f3ff;
+            --platinum-border: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #f1f3f5; color: #191c1e; }
+
+        /* HEADER */
+        header {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(203,213,225,0.5);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .header-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 24px; max-width: 1280px; margin: 0 auto;
+        }
+        .logo { font-size: 1.4rem; font-weight: 900; color: #1d4ed8; letter-spacing: -0.05em; cursor: pointer; font-family: 'Manrope', sans-serif; }
+        nav { display: flex; gap: 32px; }
+        nav button { font-size: 0.85rem; font-weight: 600; color: #475569; background: none; border: none; cursor: pointer; transition: color 0.2s; }
+        nav button:hover { color: #1d4ed8; }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%);
+            color: white;
+            text-align: center;
+            padding: 64px 24px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 70% 30%, rgba(99,102,241,0.3), transparent 60%),
+                        radial-gradient(ellipse at 20% 80%, rgba(16,185,129,0.2), transparent 50%);
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero h1 { font-family: 'Manrope', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 12px; }
+        .hero p { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 500px; margin: 0 auto; }
+
+        /* CURRENT PLAN BADGE */
+        .current-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px; padding: 6px 16px;
+            font-size: 0.8rem; font-weight: 700; margin-bottom: 20px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* PLAN CARDS GRID */
+        .plans-section {
+            max-width: 1100px; margin: -32px auto 0; padding: 0 24px 64px;
+            position: relative; z-index: 10;
+        }
+        .plans-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+        }
+        @media (max-width: 768px) { .plans-grid { grid-template-columns: 1fr; } }
+
+        .plan-card {
+            background: white;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            overflow: hidden;
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+            cursor: pointer;
+            position: relative;
+        }
+        .plan-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+        .plan-card.selected { transform: translateY(-4px); }
+
+        .plan-card.silver.selected { border-color: var(--silver); box-shadow: 0 16px 40px rgba(107,114,128,0.25); }
+        .plan-card.gold.selected   { border-color: var(--gold-border); box-shadow: 0 16px 40px rgba(251,191,36,0.3); }
+        .plan-card.platinum.selected { border-color: var(--platinum-border); box-shadow: 0 16px 40px rgba(139,92,246,0.3); }
+
+        /* POPULAR BADGE */
+        .popular-tag {
+            position: absolute; top: 16px; right: 16px;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            color: white; font-size: 0.7rem; font-weight: 800;
+            padding: 4px 10px; border-radius: 100px; letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* CARD HEADER STRIPS */
+        .plan-header {
+            padding: 24px 24px 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .plan-header.silver { background: var(--silver-bg); }
+        .plan-header.gold   { background: var(--gold-bg); }
+        .plan-header.platinum { background: var(--platinum-bg); }
+
+        .plan-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: 12px;
+        }
+        .plan-icon.silver { background: #e5e7eb; }
+        .plan-icon.gold   { background: #fef3c7; }
+        .plan-icon.platinum { background: #ede9fe; }
+
+        .plan-name {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.2rem; font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .plan-name.silver  { color: var(--silver); }
+        .plan-name.gold    { color: var(--gold); }
+        .plan-name.platinum { color: var(--platinum); }
+
+        .plan-price {
+            display: flex; align-items: baseline; gap: 4px;
+        }
+        .plan-price .amount {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2rem; font-weight: 800; color: #0f172a;
+        }
+        .plan-price .period { font-size: 0.8rem; color: #64748b; }
+
+        /* BENEFITS LIST */
+        .plan-body { padding: 20px 24px; }
+
+        .benefit-section-title {
+            font-size: 0.7rem; font-weight: 700; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            margin: 16px 0 8px;
+        }
+        .benefit-section-title:first-child { margin-top: 0; }
+
+        .benefit-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 5px 0;
+        }
+        .benefit-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .benefit-dot.silver   { background: var(--silver); }
+        .benefit-dot.gold     { background: var(--gold); }
+        .benefit-dot.platinum { background: var(--platinum); }
+
+        .benefit-text { font-size: 0.82rem; color: #334155; line-height: 1.4; }
+        .benefit-value { margin-left: auto; font-weight: 700; font-size: 0.82rem; }
+        .benefit-value.silver   { color: var(--silver); }
+        .benefit-value.gold     { color: var(--gold); }
+        .benefit-value.platinum { color: var(--platinum); }
+
+        /* SELECT BUTTON */
+        .plan-footer { padding: 0 24px 24px; }
+
+        .select-btn {
+            width: 100%; padding: 12px;
+            border-radius: 10px; border: none;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.9rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+        .plan-card.silver .select-btn {
+            background: var(--silver-bg); color: var(--silver); border: 2px solid var(--silver-border);
+        }
+        .plan-card.silver.selected .select-btn,
+        .plan-card.silver .select-btn:hover {
+            background: var(--silver); color: white; border-color: var(--silver);
+        }
+        .plan-card.gold .select-btn {
+            background: var(--gold-bg); color: var(--gold); border: 2px solid var(--gold-border);
+        }
+        .plan-card.gold.selected .select-btn,
+        .plan-card.gold .select-btn:hover {
+            background: var(--gold); color: white; border-color: var(--gold);
+        }
+        .plan-card.platinum .select-btn {
+            background: var(--platinum-bg); color: var(--platinum); border: 2px solid var(--platinum-border);
+        }
+        .plan-card.platinum.selected .select-btn,
+        .plan-card.platinum .select-btn:hover {
+            background: var(--platinum); color: white; border-color: var(--platinum);
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            max-width: 600px; margin: 0 auto 64px; padding: 0 24px;
+            text-align: center;
+        }
+        .proceed-btn {
+            padding: 16px 48px;
+            background: var(--primary); color: white;
+            border: none; border-radius: 12px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(0,74,198,0.3);
+        }
+        .proceed-btn:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,74,198,0.4); }
+        .proceed-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .proceed-hint { font-size: 0.82rem; color: #94a3b8; margin-top: 12px; }
+        .selected-plan-label {
+            font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 20px;
+        }
+        .selected-plan-label span { font-weight: 800; color: var(--primary); }
+
+        /* COMPARISON TABLE */
+        .compare-section { max-width: 1100px; margin: 0 auto 64px; padding: 0 24px; }
+        .compare-title { font-family: 'Manrope', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 24px; text-align: center; }
+        .compare-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .compare-table th {
+            padding: 14px 16px; font-family: 'Manrope', sans-serif; font-size: 0.85rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .compare-table th:first-child { text-align: left; color: #64748b; background: #f8fafc; }
+        .compare-table th.th-silver { background: var(--silver-bg); color: var(--silver); text-align: center; }
+        .compare-table th.th-gold   { background: var(--gold-bg); color: var(--gold); text-align: center; }
+        .compare-table th.th-platinum { background: var(--platinum-bg); color: var(--platinum); text-align: center; }
+        .compare-table td { padding: 12px 16px; border-top: 1px solid #f1f5f9; font-size: 0.85rem; }
+        .compare-table td:first-child { color: #475569; font-weight: 500; }
+        .compare-table td:not(:first-child) { text-align: center; font-weight: 700; }
+        .compare-table tr:hover td { background: #fafafa; }
+
+        /* FOOTER */
+        footer { background: #f8fafc; border-top: 1px solid #e2e8f0; }
+        .footer-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 32px; max-width: 1280px; margin: 0 auto;
+        }
+        .footer-logo { font-family: 'Manrope', sans-serif; font-size: 1rem; font-weight: 800; color: #0f172a; }
+        .footer-copy { font-size: 0.72rem; color: #94a3b8; margin-top: 4px; }
+        .footer-links { display: flex; gap: 32px; }
+        .footer-links button { font-size: 0.78rem; color: #94a3b8; background: none; border: none; cursor: pointer; transition: color 0.2s; }
+        .footer-links button:hover { color: #1d4ed8; }
+
+        /* CHECKMARK ANIMATION */
+        .check-selected { color: white; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo" onclick="window.location.href='index.html'">AIRPRO</div>
+        <nav>
+            <button onclick="window.location.href='index.html'">Home</button>
+            <button>Flights</button>
+            <button>Bookings</button>
+        </nav>
+        <button onclick="window.location.href='dashboard.html'" style="background:none;border:none;cursor:pointer;color:#475569;">
+            <span class="material-symbols-outlined" style="vertical-align:middle;font-size:28px;">account_circle</span>
+        </button>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="current-badge">
+            <span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span>
+            <span id="currentPlanBadge">Current Plan: Free</span>
+        </div>
+        <h1>Upgrade Your Membership</h1>
+        <p>Unlock exclusive discounts, advance booking benefits, and priority refunds tailored to your travel needs.</p>
+    </div>
+</section>
+
+<!-- PLAN CARDS -->
+<section class="plans-section">
+    <div class="plans-grid" id="plansGrid">
+
+        <!-- SILVER -->
+        <div class="plan-card silver" id="card-silver" onclick="selectPlan('silver')">
+            <div class="plan-header silver">
+                <div class="plan-icon silver">🥈</div>
+                <div class="plan-name silver">Silver</div>
+                <div class="plan-price">
+                    <span class="amount">₹999</span>
+                    <span class="period">/ year</span>
+                </div>
+            </div>
+            <div class="plan-body">
+                <div class="benefit-section-title">Advance Booking Discounts</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">30-day advance booking</span>
+                    <span class="benefit-value silver" id="s-adv30">5%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">60-day advance booking</span>
+                    <span class="benefit-value silver" id="s-adv60">10%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">90-day advance booking</span>
+                    <span class="benefit-value silver" id="s-adv90">15%</span>
+                </div>
+                <div class="benefit-section-title">Cancellation Refunds</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">Cancel 2 days before travel</span>
+                    <span class="benefit-value silver" id="s-ref2">20%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">Cancel 10 days before travel</span>
+                    <span class="benefit-value silver" id="s-ref10">40%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">Cancel 20+ days before travel</span>
+                    <span class="benefit-value silver" id="s-ref20">70%</span>
+                </div>
+                <div class="benefit-section-title">Member Discounts</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">Silver member discount</span>
+                    <span class="benefit-value silver" id="s-mem">5%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot silver"></div>
+                    <span class="benefit-text">Bulk booking discount</span>
+                    <span class="benefit-value silver" id="s-bulk">3%</span>
+                </div>
+            </div>
+            <div class="plan-footer">
+                <button class="select-btn" id="btn-silver">Select Silver</button>
+            </div>
+        </div>
+
+        <!-- GOLD -->
+        <div class="plan-card gold" id="card-gold" onclick="selectPlan('gold')">
+            <div class="popular-tag">⭐ Most Popular</div>
+            <div class="plan-header gold">
+                <div class="plan-icon gold">🥇</div>
+                <div class="plan-name gold">Gold</div>
+                <div class="plan-price">
+                    <span class="amount">₹2,499</span>
+                    <span class="period">/ year</span>
+                </div>
+            </div>
+            <div class="plan-body">
+                <div class="benefit-section-title">Advance Booking Discounts</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">30-day advance booking</span>
+                    <span class="benefit-value gold" id="g-adv30">10%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">60-day advance booking</span>
+                    <span class="benefit-value gold" id="g-adv60">18%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">90-day advance booking</span>
+                    <span class="benefit-value gold" id="g-adv90">25%</span>
+                </div>
+                <div class="benefit-section-title">Cancellation Refunds</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">Cancel 2 days before travel</span>
+                    <span class="benefit-value gold" id="g-ref2">35%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">Cancel 10 days before travel</span>
+                    <span class="benefit-value gold" id="g-ref10">60%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">Cancel 20+ days before travel</span>
+                    <span class="benefit-value gold" id="g-ref20">85%</span>
+                </div>
+                <div class="benefit-section-title">Member Discounts</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">Gold member discount</span>
+                    <span class="benefit-value gold" id="g-mem">10%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot gold"></div>
+                    <span class="benefit-text">Bulk booking discount</span>
+                    <span class="benefit-value gold" id="g-bulk">7%</span>
+                </div>
+            </div>
+            <div class="plan-footer">
+                <button class="select-btn" id="btn-gold">Select Gold</button>
+            </div>
+        </div>
+
+        <!-- PLATINUM -->
+        <div class="plan-card platinum" id="card-platinum" onclick="selectPlan('platinum')">
+            <div class="plan-header platinum">
+                <div class="plan-icon platinum">💎</div>
+                <div class="plan-name platinum">Platinum</div>
+                <div class="plan-price">
+                    <span class="amount">₹4,999</span>
+                    <span class="period">/ year</span>
+                </div>
+            </div>
+            <div class="plan-body">
+                <div class="benefit-section-title">Advance Booking Discounts</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">30-day advance booking</span>
+                    <span class="benefit-value platinum" id="p-adv30">18%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">60-day advance booking</span>
+                    <span class="benefit-value platinum" id="p-adv60">28%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">90-day advance booking</span>
+                    <span class="benefit-value platinum" id="p-adv90">40%</span>
+                </div>
+                <div class="benefit-section-title">Cancellation Refunds</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">Cancel 2 days before travel</span>
+                    <span class="benefit-value platinum" id="p-ref2">60%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">Cancel 10 days before travel</span>
+                    <span class="benefit-value platinum" id="p-ref10">80%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">Cancel 20+ days before travel</span>
+                    <span class="benefit-value platinum" id="p-ref20">100%</span>
+                </div>
+                <div class="benefit-section-title">Member Discounts</div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">Platinum member discount</span>
+                    <span class="benefit-value platinum" id="p-mem">18%</span>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-dot platinum"></div>
+                    <span class="benefit-text">Bulk booking discount</span>
+                    <span class="benefit-value platinum" id="p-bulk">12%</span>
+                </div>
+            </div>
+            <div class="plan-footer">
+                <button class="select-btn" id="btn-platinum">Select Platinum</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+    <p class="selected-plan-label" id="selectedLabel">No plan selected</p>
+    <button class="proceed-btn" id="proceedBtn" disabled onclick="proceedToPayment()">
+        Proceed to Payment →
+    </button>
+    <p class="proceed-hint">Secure payment · Annual membership · Cancel anytime</p>
+</div>
+
+<!-- COMPARISON TABLE -->
+<section class="compare-section">
+    <h2 class="compare-title">Full Benefits Comparison</h2>
+    <div style="overflow-x:auto;">
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Benefit</th>
+                    <th class="th-silver">🥈 Silver</th>
+                    <th class="th-gold">🥇 Gold</th>
+                    <th class="th-platinum">💎 Platinum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Annual Price</td>
+                    <td>₹999</td>
+                    <td>₹2,499</td>
+                    <td>₹4,999</td>
+                </tr>
+                <tr>
+                    <td>Member Discount</td>
+                    <td style="color:var(--silver)">5%</td>
+                    <td style="color:var(--gold)">10%</td>
+                    <td style="color:var(--platinum)">18%</td>
+                </tr>
+                <tr>
+                    <td>Bulk Booking Discount</td>
+                    <td style="color:var(--silver)">3%</td>
+                    <td style="color:var(--gold)">7%</td>
+                    <td style="color:var(--platinum)">12%</td>
+                </tr>
+                <tr>
+                    <td>30-Day Advance Discount</td>
+                    <td style="color:var(--silver)">5%</td>
+                    <td style="color:var(--gold)">10%</td>
+                    <td style="color:var(--platinum)">18%</td>
+                </tr>
+                <tr>
+                    <td>60-Day Advance Discount</td>
+                    <td style="color:var(--silver)">10%</td>
+                    <td style="color:var(--gold)">18%</td>
+                    <td style="color:var(--platinum)">28%</td>
+                </tr>
+                <tr>
+                    <td>90-Day Advance Discount</td>
+                    <td style="color:var(--silver)">15%</td>
+                    <td style="color:var(--gold)">25%</td>
+                    <td style="color:var(--platinum)">40%</td>
+                </tr>
+                <tr>
+                    <td>Refund (Cancel 2 days before)</td>
+                    <td style="color:var(--silver)">20%</td>
+                    <td style="color:var(--gold)">35%</td>
+                    <td style="color:var(--platinum)">60%</td>
+                </tr>
+                <tr>
+                    <td>Refund (Cancel 10 days before)</td>
+                    <td style="color:var(--silver)">40%</td>
+                    <td style="color:var(--gold)">60%</td>
+                    <td style="color:var(--platinum)">80%</td>
+                </tr>
+                <tr>
+                    <td>Refund (Cancel 20+ days before)</td>
+                    <td style="color:var(--silver)">70%</td>
+                    <td style="color:var(--gold)">85%</td>
+                    <td style="color:var(--platinum)">100%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div>
+            <div class="footer-logo">AIRPRO</div>
+            <div class="footer-copy">© 2026 AIRPRO Airline Management. All rights reserved.</div>
+        </div>
+        <div class="footer-links">
+            <button onclick="window.location.href='footers/privacy_policy.html'">Privacy Policy</button>
+            <button onclick="window.location.href='footers/T&C.html'">Terms of Service</button>
+            <button onclick="window.location.href='footers/support.html'">Support</button>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ─── Plan Data ────────────────────────────────────────────────────────────
+    const PLANS = {
+        silver: {
+            name: 'Silver',
+            price: 999,
+            displayPrice: '₹999',
+            DiscountPercentageThirtyDaysAdvanceBooking: 5,
+            DiscountPercentageSixtyDaysAdvanceBooking: 10,
+            DiscountPercentageNinetyDaysAdvanceBooking: 15,
+            BulkBookingDiscount: 3,
+            RefundPercentageForTicketCancellation2DaysBeforeTravelDate: 20,
+            RefundPercentageForTicketCancellation10DaysBeforeTravelDate: 40,
+            RefundPercentageForTicketCancellation20DaysOrMoreBeforeTravelDate: 70,
+            SilverUserDiscount: 5,
+            GoldUserDiscount: 0,
+            PlatinumUserDiscount: 0,
+        },
+        gold: {
+            name: 'Gold',
+            price: 2499,
+            displayPrice: '₹2,499',
+            DiscountPercentageThirtyDaysAdvanceBooking: 10,
+            DiscountPercentageSixtyDaysAdvanceBooking: 18,
+            DiscountPercentageNinetyDaysAdvanceBooking: 25,
+            BulkBookingDiscount: 7,
+            RefundPercentageForTicketCancellation2DaysBeforeTravelDate: 35,
+            RefundPercentageForTicketCancellation10DaysBeforeTravelDate: 60,
+            RefundPercentageForTicketCancellation20DaysOrMoreBeforeTravelDate: 85,
+            SilverUserDiscount: 0,
+            GoldUserDiscount: 10,
+            PlatinumUserDiscount: 0,
+        },
+        platinum: {
+            name: 'Platinum',
+            price: 4999,
+            displayPrice: '₹4,999',
+            DiscountPercentageThirtyDaysAdvanceBooking: 18,
+            DiscountPercentageSixtyDaysAdvanceBooking: 28,
+            DiscountPercentageNinetyDaysAdvanceBooking: 40,
+            BulkBookingDiscount: 12,
+            RefundPercentageForTicketCancellation2DaysBeforeTravelDate: 60,
+            RefundPercentageForTicketCancellation10DaysBeforeTravelDate: 80,
+            RefundPercentageForTicketCancellation20DaysOrMoreBeforeTravelDate: 100,
+            SilverUserDiscount: 0,
+            GoldUserDiscount: 0,
+            PlatinumUserDiscount: 18,
+        }
+    };
+
+    let selectedPlan = null;
+
+    // ─── On Load ──────────────────────────────────────────────────────────────
+    window.addEventListener('load', () => {
+        const session = localStorage.getItem('airpro_session');
+        if (session) {
+            const user = JSON.parse(session);
+            const current = user.membershipTier || 'Free';
+            document.getElementById('currentPlanBadge').textContent = 'Current Plan: ' + current;
+        }
+    });
+
+    // ─── Select Plan ─────────────────────────────────────────────────────────
+    function selectPlan(tier) {
+        // Deselect all
+        ['silver','gold','platinum'].forEach(t => {
+            document.getElementById('card-' + t).classList.remove('selected');
+        });
+
+        selectedPlan = tier;
+        document.getElementById('card-' + tier).classList.add('selected');
+
+        const plan = PLANS[tier];
+        const label = document.getElementById('selectedLabel');
+        const btn = document.getElementById('proceedBtn');
+        label.innerHTML = `Selected: <span>${plan.name} Plan — ${plan.displayPrice}/year</span>`;
+        btn.disabled = false;
+    }
+
+    // ─── Proceed to Payment ───────────────────────────────────────────────────
+    function proceedToPayment() {
+        if (!selectedPlan) return;
+        const plan = PLANS[selectedPlan];
+
+        // Store pending membership upgrade
+        const membershipData = {
+            type: 'membership_upgrade',
+            tier: selectedPlan,
+            planName: plan.name,
+            price: plan.price,
+            ...plan
+        };
+        localStorage.setItem('airpro_pending_membership', JSON.stringify(membershipData));
+
+        // Redirect to payment page with amount and context
+        const encodedAmt = encodeURIComponent(`Rs ${plan.price.toLocaleString('en-IN')}.00`);
+        window.location.href = `payment.html?amount=${encodedAmt}&type=membership&tier=${selectedPlan}`;
+    }
+</script>
+</body>
+</html>
