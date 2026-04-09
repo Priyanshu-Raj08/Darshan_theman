@@ -256,6 +256,20 @@
 
         /* CHECKMARK ANIMATION */
         .check-selected { color: white; font-size: 0.75rem; }
+    
+        #profile-popup {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #profile-popup.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
     </style>
 </head>
 <body>
@@ -293,7 +307,7 @@
         <!-- SILVER -->
         <div class="plan-card silver" id="card-silver" onclick="selectPlan('silver')">
             <div class="plan-header silver">
-                <div class="plan-icon silver">🥈</div>
+                <!-- <div class="plan-icon silver">🥈</div> -->
                 <div class="plan-name silver">Silver</div>
                 <div class="plan-price">
                     <span class="amount">₹999</span>
@@ -352,9 +366,9 @@
 
         <!-- GOLD -->
         <div class="plan-card gold" id="card-gold" onclick="selectPlan('gold')">
-            <div class="popular-tag">⭐ Most Popular</div>
+            <div class="popular-tag">Most Popular</div>
             <div class="plan-header gold">
-                <div class="plan-icon gold">🥇</div>
+                <!-- <div class="plan-icon gold">🥇</div> -->
                 <div class="plan-name gold">Gold</div>
                 <div class="plan-price">
                     <span class="amount">₹2,499</span>
@@ -414,7 +428,7 @@
         <!-- PLATINUM -->
         <div class="plan-card platinum" id="card-platinum" onclick="selectPlan('platinum')">
             <div class="plan-header platinum">
-                <div class="plan-icon platinum">💎</div>
+                <!-- <div class="plan-icon platinum">💎</div> -->
                 <div class="plan-name platinum">Platinum</div>
                 <div class="plan-price">
                     <span class="amount">₹4,999</span>
@@ -490,9 +504,9 @@
             <thead>
                 <tr>
                     <th>Benefit</th>
-                    <th class="th-silver">🥈 Silver</th>
-                    <th class="th-gold">🥇 Gold</th>
-                    <th class="th-platinum">💎 Platinum</th>
+                    <th class="th-silver">Silver</th>
+                    <th class="th-gold">Gold</th>
+                    <th class="th-platinum">Platinum</th>
                 </tr>
             </thead>
             <tbody>
@@ -668,5 +682,43 @@
         window.location.href = `payment.html?amount=${encodedAmt}&type=membership&tier=${selectedPlan}`;
     }
 </script>
+
+    <script>
+        // Profile auth generic
+        window.addEventListener('load', () => {
+            const session = localStorage.getItem('airpro_session');
+            if (session) {
+                const user = JSON.parse(session);
+                const tLabel = document.getElementById('trigger-label');
+                if (tLabel) {
+                    tLabel.innerText = user.name;
+                    tLabel.classList.remove('hidden');
+                }
+                const pName = document.getElementById('popup-name');
+                const pEmail = document.getElementById('popup-email');
+                if(pName) pName.innerText = user.name;
+                if(pEmail) pEmail.innerText = user.email;
+            }
+        });
+
+        function handleProfileClick() {
+            const popup = document.getElementById('profile-popup');
+            if(popup) popup.classList.toggle('active');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('airpro_session');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('click', (e) => {
+            const popup = document.getElementById('profile-popup');
+            const trigger = document.getElementById('profile-trigger');
+            if (popup && trigger && !popup.contains(e.target) && !trigger.contains(e.target)) {
+                popup.classList.remove('active');
+            }
+        });
+    </script>
+
 </body>
 </html>

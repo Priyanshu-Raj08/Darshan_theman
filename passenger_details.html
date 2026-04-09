@@ -143,6 +143,20 @@
         main {
             flex: 1;
         }
+    
+        #profile-popup {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #profile-popup.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
     </style>
 </head>
 
@@ -167,11 +181,41 @@
                     class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-200"
                     onclick="void(0)">Bookings</button>
             </nav>
-            <div class="flex items-center space-x-4">
-                <button class="text-slate-600 hover:text-primary transition-colors" onclick="void(0)">
-                    <span class="material-symbols-outlined align-middle"
-                        data-icon="account_circle">account_circle</span>
-                </button>
+                        <div class="flex items-center space-x-4">
+                <div class="relative" id="profile-container">
+                    <button class="flex items-center gap-2 p-1 pl-3 h-10 rounded-full hover:bg-slate-100 transition-all border border-outline-variant/20 text-slate-600 hover:text-primary" onclick="handleProfileClick()" id="profile-trigger" title="Account">
+                        <span id="trigger-label" class="text-xs font-semibold font-body hidden"></span>
+                        <span id="trigger-icon" class="material-symbols-outlined align-middle" data-icon="account_circle">account_circle</span>
+                    </button>
+                    <!-- Profile Popup -->
+                    <div class="absolute right-0 mt-3 w-80 bg-surface-container-lowest rounded-lg shadow-xl ring-1 ring-on-surface/5 z-50 overflow-hidden" id="profile-popup">
+                        <div class="px-5 py-4 flex items-center gap-4 bg-surface-container-low/50">
+                            <div class="w-12 h-12 rounded-full border-2 border-primary/10 flex items-center justify-center bg-white text-primary">
+                                <span class="material-symbols-outlined text-3xl">account_circle</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span id="popup-name" class="font-manrope text-base font-bold text-on-surface tracking-tight">Guest User</span>
+                                <span id="popup-email" class="font-body text-xs text-on-surface-variant font-medium">customer@airpro.com</span>
+                            </div>
+                        </div>
+                        <div class="py-2">
+                            <a class="flex items-center gap-3 px-5 py-3 text-sm font-medium text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all group" href="user_dashboard.html">
+                                <span class="material-symbols-outlined text-[20px]" data-icon="person">person</span>
+                                <span class="font-body">View Profile</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-5 py-3 text-sm font-medium text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all group" href="tickets.html">
+                                <span class="material-symbols-outlined text-[20px]" data-icon="airplane_ticket">airplane_ticket</span>
+                                <span class="font-body">My Bookings</span>
+                            </a>
+                        </div>
+                        <div class="p-4 border-t border-surface-container-high">
+                            <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-error-container text-error rounded-lg font-manrope font-bold text-sm hover:bg-error hover:text-on-error transition-all duration-200">
+                                <span class="material-symbols-outlined text-[18px]" data-icon="logout">logout</span>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -470,33 +514,21 @@
                 return;
             }
 
-            dobElement.classList.remove('error-border');
-            errEl.style.display = 'none';
-
             const today = new Date();
             let age = today.getFullYear() - entered.getFullYear();
             if (today.getMonth() < entered.getMonth() || (today.getMonth() === entered.getMonth() && today.getDate() < entered.getDate())) age--;
-            document.getElementById(targetId).value = age >= 0 ? `${age} Yrs` : "Invalid";
 
-            // If Passenger 1 is under 18, check if there's any adult already added
             if (targetId === 'age1' && age >= 0 && age < 18) {
-                let hasAdult = false;
-                for (let i = 2; i <= pCount; i++) {
-                    const dobInput = document.getElementById(`p${i}`)?.querySelector('.p-dob');
-                    if (dobInput && dobInput.value) {
-                        const ed = new Date(dobInput.value);
-                        let a = today.getFullYear() - ed.getFullYear();
-                        if (today.getMonth() < ed.getMonth() || (today.getMonth() === ed.getMonth() && today.getDate() < ed.getDate())) a--;
-                        if (a >= 18) {
-                            hasAdult = true;
-                            break;
-                        }
-                    }
-                }
-                if (!hasAdult) {
-                    document.getElementById('minorModal').classList.remove('hidden');
-                }
+                dobElement.classList.add('error-border');
+                errEl.style.display = 'block';
+                errEl.textContent = 'Primary passenger must be at least 18 years old.';
+                document.getElementById(targetId).value = '';
+                return;
             }
+
+            dobElement.classList.remove('error-border');
+            errEl.style.display = 'none';
+            document.getElementById(targetId).value = age >= 0 ? `${age} Yrs` : "Invalid";
         }
 
         // Block letters from name fields — only allow letters, spaces, hyphens
@@ -512,7 +544,7 @@
             }
         }
 
-        // Validate name: no digits allowed
+        // Validate name: no digits allowed, minimum 3 characters
         function validateName(input, errEl) {
             // Filter leading spaces
             if (input.value.startsWith(' ')) {
@@ -524,6 +556,12 @@
                 input.classList.add('error-border');
                 errEl.style.display = 'block';
                 errEl.textContent = 'Name cannot contain numbers.';
+                return false;
+            }
+            if (val.trim().length > 0 && val.trim().length < 3) {
+                input.classList.add('error-border');
+                errEl.style.display = 'block';
+                errEl.textContent = 'Please enter a valid name.';
                 return false;
             }
             input.classList.remove('error-border');
@@ -752,7 +790,15 @@
                         const today = new Date();
                         let a = today.getFullYear() - entered.getFullYear();
                         if (today.getMonth() < entered.getMonth() || (today.getMonth() === entered.getMonth() && today.getDate() < entered.getDate())) a--;
-                        if (a >= 18) hasAdult = true;
+                        
+                        if (i === 1 && a >= 0 && a < 18) {
+                            dobInput.classList.add('error-border');
+                            dobErrEl.textContent = 'Primary passenger must be at least 18 years old.';
+                            dobErrEl.style.display = 'block';
+                            valid = false;
+                        } else if (a >= 18) {
+                            hasAdult = true;
+                        }
                     }
                 }
 
@@ -767,7 +813,7 @@
                 }
 
                 if (!valid) {
-                    showErrorModal(`Please complete all required fields correctly for Passenger ${i}.`);
+                    showErrorModal(`Please check the details for Passenger ${i} and retry.`);
                     return;
                 }
 
@@ -799,6 +845,44 @@
             window.location.href = `payment.html?amount=${encodeURIComponent(total)}`;
         }
     </script>
+
+    <script>
+        // Profile auth generic
+        window.addEventListener('load', () => {
+            const session = localStorage.getItem('airpro_session');
+            if (session) {
+                const user = JSON.parse(session);
+                const tLabel = document.getElementById('trigger-label');
+                if (tLabel) {
+                    tLabel.innerText = user.name;
+                    tLabel.classList.remove('hidden');
+                }
+                const pName = document.getElementById('popup-name');
+                const pEmail = document.getElementById('popup-email');
+                if(pName) pName.innerText = user.name;
+                if(pEmail) pEmail.innerText = user.email;
+            }
+        });
+
+        function handleProfileClick() {
+            const popup = document.getElementById('profile-popup');
+            if(popup) popup.classList.toggle('active');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('airpro_session');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('click', (e) => {
+            const popup = document.getElementById('profile-popup');
+            const trigger = document.getElementById('profile-trigger');
+            if (popup && trigger && !popup.contains(e.target) && !trigger.contains(e.target)) {
+                popup.classList.remove('active');
+            }
+        });
+    </script>
+
 </body>
 
 </html>
