@@ -9,6 +9,11 @@
     <!-- fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap"
         rel="stylesheet" />
@@ -198,7 +203,7 @@
                     <button
                         class="flex items-center gap-2 p-1 pl-3 h-10 rounded-full hover:bg-slate-100 transition-all border border-outline-variant/20 text-slate-600 hover:text-primary"
                         onclick="handleProfileClick()" id="profile-trigger" title="Account">
-                        <span id="trigger-label" class="text-xs font-semibold font-body hidden">Login / Sign Up</span>
+                        <span id="trigger-label" class="text-xs font-semibold font-body hidden"></span>
                         <span id="trigger-icon" class="material-symbols-outlined align-middle"
                             data-icon="account_circle">account_circle</span>
                     </button>
@@ -262,7 +267,7 @@
             <div class="absolute inset-0 overflow-hidden z-0">
                 <img alt="Professional commercial aircraft" class="absolute inset-0 w-full h-full object-cover"
                     data-alt="A clean, professional wide shot of a commercial airliner flying above a layer of soft white clouds during high noon with clear blue skies"
-                    src="https://images.pexels.com/photos/8812610/pexels-photo-8812610.jpeg" />
+                    src="images/index_bg.jpeg">
                 <div class="absolute inset-0 bg-gradient-to-r from-on-background/60 to-transparent"></div>
             </div>
             <div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
@@ -663,7 +668,7 @@
         const DUMMY_USERS = {
             'customer@airpro.com': {
                 password: 'password123',
-                name: 'Kiyatoka Ayanokoji',
+                name: 'Lelouch Vi Brittania',
                 role: 'customer',
                 email: 'customer@airpro.com'
             },
@@ -676,6 +681,12 @@
         };
 
         window.addEventListener('load', () => {
+            // Prevent going back to previous pages
+            window.history.pushState(null, "", window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, "", window.location.href);
+            };
+
             // Check session storage for persistence if needed
             const session = localStorage.getItem('airpro_session');
             if (session) {
@@ -914,7 +925,7 @@
                 popupName.innerText = currentUser.name;
                 popupEmail.innerText = currentUser.email;
             } else {
-                triggerLabel.innerText = "Login / Sign Up";
+                triggerLabel.innerText = "";
                 triggerLabel.classList.add('hidden');
 
                 popupName.innerText = "Guest User";

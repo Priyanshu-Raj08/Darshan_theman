@@ -289,6 +289,17 @@
                 grid-template-columns: 1fr;
             }
         }
+        #profile-popup {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #profile-popup.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
     </style>
 </head>
 
@@ -314,10 +325,39 @@
                     onclick="void(0)">Bookings</button>
             </nav>
             <div class="flex items-center space-x-4">
-                <button class="text-slate-600 hover:text-primary transition-colors" onclick="void(0)">
-                    <span class="material-symbols-outlined align-middle"
-                        data-icon="account_circle">account_circle</span>
-                </button>
+                <div class="relative" id="profile-container">
+                    <button class="flex items-center gap-2 p-1 pl-3 h-10 rounded-full hover:bg-slate-100 transition-all border border-outline-variant/20 text-slate-600 hover:text-primary" onclick="handleProfileClick()" id="profile-trigger" title="Account">
+                        <span id="trigger-label" class="text-xs font-semibold font-body hidden"></span>
+                        <span id="trigger-icon" class="material-symbols-outlined align-middle" data-icon="account_circle">account_circle</span>
+                    </button>
+                    <div class="absolute right-0 mt-3 w-80 bg-surface-container-lowest rounded-lg shadow-xl ring-1 ring-on-surface/5 z-50 overflow-hidden" id="profile-popup">
+                        <div class="px-5 py-4 flex items-center gap-4 bg-surface-container-low/50">
+                            <div class="w-12 h-12 rounded-full border-2 border-primary/10 flex items-center justify-center bg-white text-primary">
+                                <span class="material-symbols-outlined text-3xl">account_circle</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span id="popup-name" class="font-manrope text-base font-bold text-on-surface tracking-tight">Guest User</span>
+                                <span id="popup-email" class="font-body text-xs text-on-surface-variant font-medium">customer@airpro.com</span>
+                            </div>
+                        </div>
+                        <div class="py-2">
+                            <a class="flex items-center gap-3 px-5 py-3 text-sm font-medium text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all group" href="user_dashboard.html">
+                                <span class="material-symbols-outlined text-[20px]" data-icon="person">person</span>
+                                <span class="font-body">View Profile</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-5 py-3 text-sm font-medium text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all group" href="tickets.html">
+                                <span class="material-symbols-outlined text-[20px]" data-icon="airplane_ticket">airplane_ticket</span>
+                                <span class="font-body">My Bookings</span>
+                            </a>
+                        </div>
+                        <div class="p-4 border-t border-surface-container-high">
+                            <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-error-container text-error rounded-lg font-manrope font-bold text-sm hover:bg-error hover:text-on-error transition-all duration-200">
+                                <span class="material-symbols-outlined text-[18px]" data-icon="logout">logout</span>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -402,6 +442,19 @@
             <h2>Payment Failed</h2>
             <p id="failure-message">Please check your details.</p>
             <button type="button" class="pay-btn modal-close" style="margin-top: 20px;">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Confirm Payment Modal -->
+    <div class="modal-overlay" id="confirm-modal" hidden>
+        <div class="payment-modal">
+            <div class="status-icon" style="background: #e0e7ff; color: #4338ca;">?</div>
+            <h2>Confirm Payment</h2>
+            <p>Are you sure you want to proceed with this payment?</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" id="confirm-yes-btn" class="pay-btn" style="flex: 1;">Yes, Pay</button>
+                <button type="button" class="pay-btn modal-close" style="flex: 1; background: #94a3b8;">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -496,61 +549,67 @@
             } else if (!/^[a-zA-Z\s]*$/.test(name) || name.replace(/[^a-zA-Z]/g, '').length < 3) {
                 showError("Cardholder Name must contain at least 3 letters and no digits or special characters.");
             } else {
-                const urlParams = new URLSearchParams(window.location.search);
-                const isMembership = urlParams.get('type') === 'membership';
+                document.getElementById('confirm-modal').hidden = false;
+            }
+        });
 
-                if (isMembership) {
-                    const pendingMembership = localStorage.getItem('airpro_pending_membership');
-                    if (pendingMembership) {
-                        const mData = JSON.parse(pendingMembership);
-                        // update session
-                        const sessionStr = localStorage.getItem('airpro_session');
-                        if (sessionStr) {
-                            const user = JSON.parse(sessionStr);
-                            user.membershipTier = mData.planName;
-                            localStorage.setItem('airpro_session', JSON.stringify(user));
-                        }
+        document.getElementById('confirm-yes-btn').addEventListener('click', () => {
+            document.getElementById('confirm-modal').hidden = true;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const isMembership = urlParams.get('type') === 'membership';
+
+            if (isMembership) {
+                const pendingMembership = localStorage.getItem('airpro_pending_membership');
+                if (pendingMembership) {
+                    const mData = JSON.parse(pendingMembership);
+                    const sessionStr = localStorage.getItem('airpro_session');
+                    if (sessionStr) {
+                        const user = JSON.parse(sessionStr);
+                        user.membershipTier = mData.planName;
+                        localStorage.setItem('airpro_session', JSON.stringify(user));
                     }
-                    
-                    document.querySelector('#success-modal h2').textContent = "Upgrade Successful!";
-                    document.querySelector('#success-modal p').textContent = "Your membership has been upgraded successfully.";
-                    document.getElementById('view-ticket-btn').textContent = "Go to Dashboard";
+                }
+
+                document.querySelector('#success-modal h2').textContent = "Upgrade Successful!";
+                document.querySelector('#success-modal p').textContent = "Your membership has been upgraded successfully.";
+                document.getElementById('view-ticket-btn').textContent = "Go to Dashboard";
+                document.getElementById('view-ticket-btn').onclick = () => {
+                    window.location.href = 'user_dashboard.html';
+                };
+                successModal.hidden = false;
+            } else {
+                const pendingData = localStorage.getItem('airpro_pending_booking');
+                if (pendingData) {
+                    const booking = JSON.parse(pendingData);
+                    const pnr = 'AP' + Math.random().toString(36).substring(2, 7).toUpperCase();
+                    booking.pnr = pnr;
+                    booking.bookingId = 'BK' + Date.now().toString().slice(-8);
+                    booking.status = 'Confirmed';
+                    booking.bookedAt = new Date().toISOString();
+
+                    localStorage.setItem('airpro_last_confirmation', JSON.stringify(booking));
+
+                    let userBookings = JSON.parse(localStorage.getItem('airpro_user_bookings') || '[]');
+                    userBookings.unshift(booking);
+                    localStorage.setItem('airpro_user_bookings', JSON.stringify(userBookings));
+
+                    document.querySelector('#success-modal h2').textContent = "Payment Success!";
+                    document.querySelector('#success-modal p').textContent = "Your flight with AirPro is confirmed.";
+                    document.getElementById('view-ticket-btn').textContent = "View My Ticket";
+                    successModal.hidden = false;
+
                     document.getElementById('view-ticket-btn').onclick = () => {
-                        window.location.href = 'user_dashboard.html';
+                        window.location.replace('payment_confirmation.html');
+                    };
+                } else {
+                    document.querySelector('#success-modal h2').textContent = "Payment Success!";
+                    document.querySelector('#success-modal p').textContent = "Your transaction is successful.";
+                    document.getElementById('view-ticket-btn').textContent = "Go to Home";
+                    document.getElementById('view-ticket-btn').onclick = () => {
+                        window.location.replace('index.html');
                     };
                     successModal.hidden = false;
-                } else {
-                    // Finalize Booking
-                    const pendingData = localStorage.getItem('airpro_pending_booking');
-                    if (pendingData) {
-                        const booking = JSON.parse(pendingData);
-                        const pnr = 'AP' + Math.random().toString(36).substring(2, 7).toUpperCase();
-                        booking.pnr = pnr;
-                        booking.bookingId = 'BK' + Date.now().toString().slice(-8);
-                        
-                        // Save final confirmation
-                        localStorage.setItem('airpro_last_confirmation', JSON.stringify(booking));
-                        
-                        document.querySelector('#success-modal h2').textContent = "Payment Success!";
-                        document.querySelector('#success-modal p').textContent = "Your flight with AirPro is confirmed.";
-                        document.getElementById('view-ticket-btn').textContent = "View My Ticket";
-                        
-                        // Show success modal
-                        successModal.hidden = false;
-
-                        // Update button redirect
-                        document.getElementById('view-ticket-btn').onclick = () => {
-                            window.location.href = 'payment_confirmation.html';
-                        };
-                    } else {
-                        document.querySelector('#success-modal h2').textContent = "Payment Success!";
-                        document.querySelector('#success-modal p').textContent = "Your transaction is successful.";
-                        document.getElementById('view-ticket-btn').textContent = "Go to Home";
-                        document.getElementById('view-ticket-btn').onclick = () => {
-                            window.location.href = 'index.html';
-                        };
-                        successModal.hidden = false;
-                    }
                 }
             }
         });
@@ -564,7 +623,40 @@
             btn.addEventListener('click', () => {
                 successModal.hidden = true;
                 failureModal.hidden = true;
+                const cm = document.getElementById('confirm-modal');
+                if (cm) cm.hidden = true;
             });
+        });
+    </script>
+
+    <script>
+        // Profile auth
+        window.addEventListener('load', () => {
+            const session = localStorage.getItem('airpro_session');
+            if (session) {
+                const user = JSON.parse(session);
+                const tLabel = document.getElementById('trigger-label');
+                if (tLabel) { tLabel.innerText = user.name; tLabel.classList.remove('hidden'); }
+                const pName = document.getElementById('popup-name');
+                const pEmail = document.getElementById('popup-email');
+                if (pName) pName.innerText = user.name;
+                if (pEmail) pEmail.innerText = user.email;
+            }
+        });
+        function handleProfileClick() {
+            const popup = document.getElementById('profile-popup');
+            if (popup) popup.classList.toggle('active');
+        }
+        function handleLogout() {
+            localStorage.removeItem('airpro_session');
+            window.location.href = 'index.html';
+        }
+        document.addEventListener('click', (e) => {
+            const popup = document.getElementById('profile-popup');
+            const trigger = document.getElementById('profile-trigger');
+            if (popup && trigger && !popup.contains(e.target) && !trigger.contains(e.target)) {
+                popup.classList.remove('active');
+            }
         });
     </script>
 </body>

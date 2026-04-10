@@ -125,14 +125,14 @@
                 <button class="text-slate-600 hover:text-blue-600 transition-colors"
                     onclick="window.location.href='index.html'">Home</button>
                 <button class="text-slate-600 hover:text-blue-600 transition-colors" onclick="void(0)">Flights</button>
-                <button class="text-slate-600 hover:text-blue-600 transition-colors" onclick="void(0)">Bookings</button>
+                <button class="text-slate-600 hover:text-blue-600 transition-colors" onclick="window.location.href='tickets.html'">Bookings</button>
             </nav>
             <div class="flex items-center space-x-4">
                 <div class="relative" id="profile-container">
                     <button
                         class="flex items-center gap-2 p-1 pl-3 h-10 rounded-full hover:bg-slate-100 transition-all border border-outline-variant/20 text-slate-600 hover:text-primary"
                         onclick="handleProfileClick()" id="profile-trigger" title="Account">
-                        <span id="trigger-label" class="text-xs font-semibold font-body hidden">Login / Sign Up</span>
+                        <span id="trigger-label" class="text-xs font-semibold font-body hidden"></span>
                         <span id="trigger-icon" class="material-symbols-outlined align-middle"
                             data-icon="account_circle">account_circle</span>
                     </button>
@@ -345,7 +345,7 @@
             // Prevent going back to payment, redirect to home instead
             window.history.pushState(null, "", window.location.href);
             window.onpopstate = function () {
-                window.location.href = "index.html";
+                window.location.replace("index.html");
             };
 
             let data = defaultData;
